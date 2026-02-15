@@ -31,6 +31,10 @@ FROM alpine:3.19
 RUN apk add --no-cache ca-certificates
 WORKDIR /app
 
+# cpg-gen needs "go" at runtime for packages.Load
+COPY --from=cpg-builder /usr/local/go /usr/local/go
+ENV PATH="/usr/local/go/bin:$PATH" GOROOT=/usr/local/go
+
 COPY --from=frontend /client/dist /static
 COPY --from=server-builder /build/server /server
 COPY --from=cpg-builder /go/app/cpg-gen /app/cpg-gen
