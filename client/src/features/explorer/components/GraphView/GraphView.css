@@ -1,0 +1,56 @@
+.graph-view-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+}
+
+.graph-view-title {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+  background: rgba(56, 161, 105, 0.9);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.graph-view-cy {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+}
+
+.graph-view-tooltip {
+  position: fixed;
+  transform: translate(-50%, -100%);
+  margin-top: -8px;
+  z-index: 20;
+  pointer-events: none;
+  max-width: 320px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #e2e8f0;
+  background: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  word-break: break-word;
+}
+
+.graph-view-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #718096;
+  font-size: 14px;
+  pointer-events: none;
+}

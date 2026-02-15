@@ -1,0 +1,18 @@
+# CPG generator binary (build with: go build -o cpg-gen .)
+cpg-gen
+
+# macOS
+.DS_Store
+
+# Go
+*.exe
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+*~
+
+# Generated CPG database and data directory
+data/
+output.db

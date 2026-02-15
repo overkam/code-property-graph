@@ -1,5 +1,19 @@
 # Take-Home Assignment — Full-Stack Developer
 
+## Quick start (Docker)
+
+To run the app with no extra steps:
+
+```bash
+git clone <repository-url>
+cd cpg-test-release
+docker-compose up
+```
+
+Submodules are fetched automatically during the image build. Open http://localhost:8080 when the container is up. The first run may take several minutes while the CPG database is generated.
+
+---
+
 ## Context
 
 This archive ships `cpg-gen` — a Code Property Graph (CPG) generator for Go projects. A CPG fuses the abstract syntax tree, control flow graph, data flow graph, call graph, type system, and static analysis results into a single queryable graph stored as an SQLite database.

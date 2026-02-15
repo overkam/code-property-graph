@@ -1,0 +1,12 @@
+# Dependencies and build artifacts
+client/node_modules
+client/dist
+*.db
+output.db
+data/
+
+# Git and IDE (.git is needed in build context for submodule fetch in Docker)
+.gitignore
+.cursor
+*.swp
+*~

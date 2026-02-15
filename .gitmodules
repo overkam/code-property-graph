@@ -7,3 +7,6 @@
 [submodule "prometheus-adapter"]
 	path = prometheus-adapter
 	url = https://github.com/kubernetes-sigs/prometheus-adapter.git
+[submodule "alertmanager"]
+	path = alertmanager
+	url = https://github.com/prometheus/alertmanager.git

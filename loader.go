@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"go/token"
 	"os"
@@ -16,26 +17,64 @@ type LoadResult struct {
 	Fset     *token.FileSet
 }
 
+// readModulePath returns the module path from dir/go.mod, or "" if unreadable.
+func readModulePath(dir string) string {
+	f, err := os.Open(filepath.Join(dir, "go.mod"))
+	if err != nil {
+		return ""
+	}
+	defer f.Close()
+	sc := bufio.NewScanner(f)
+	for sc.Scan() {
+		line := strings.TrimSpace(sc.Text())
+		if strings.HasPrefix(line, "module ") {
+			return strings.TrimSpace(strings.TrimPrefix(line, "module "))
+		}
+	}
+	return ""
+}
+
 // CreateTempGoWork writes a temporary go.work file that includes all modules
 // in the ModuleSet. Returns the path to the temp file (caller must os.Remove).
+// If a nested submodule declares the same module path as an already-listed
+// directory (e.g. alertmanager/internal/tools vs prometheus/internal/tools),
+// only the first occurrence is used to avoid "module appears multiple times".
 func CreateTempGoWork(ms *ModuleSet) (string, error) {
 	var buf strings.Builder
 	buf.WriteString("go 1.25.7\n\nuse (\n")
 
-	// Collect top-level module dirs for dedup against discovered sub-modules.
-	topDirs := make(map[string]bool, len(ms.Dirs()))
+	// Track dirs and module paths we've already added.
+	seenDirs := make(map[string]bool, len(ms.Dirs()))
+	seenModPaths := make(map[string]bool, len(ms.Dirs())*2)
+
 	for _, m := range ms.Dirs() {
 		buf.WriteString("\t" + m.Dir + "\n")
-		topDirs[m.Dir] = true
+		seenDirs[m.Dir] = true
+		if m.ModPath != "" {
+			seenModPaths[m.ModPath] = true
+		} else {
+			if p := readModulePath(m.Dir); p != "" {
+				seenModPaths[p] = true
+			}
+		}
 	}
 
-	// Walk ALL module directories (not just primary) to find nested sub-modules
-	// with their own go.mod. Deduplicate against already-listed top-level dirs.
+	// Walk ALL module directories to find nested sub-modules. Skip any submodule
+	// whose module path is already in the workspace (avoids duplicate e.g.
+	// github.com/prometheus/prometheus/internal/tools from alertmanager).
 	for _, m := range ms.Dirs() {
 		for _, d := range findSubModules(m.Dir) {
-			if !topDirs[d] {
-				buf.WriteString("\t" + d + "\n")
-				topDirs[d] = true // prevent duplicates across module walks
+			if seenDirs[d] {
+				continue
+			}
+			modPath := readModulePath(d)
+			if modPath != "" && seenModPaths[modPath] {
+				continue
+			}
+			buf.WriteString("\t" + d + "\n")
+			seenDirs[d] = true
+			if modPath != "" {
+				seenModPaths[modPath] = true
 			}
 		}
 	}
