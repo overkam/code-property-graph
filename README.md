@@ -10,7 +10,7 @@ cd cpg-test-release
 docker-compose up
 ```
 
-Submodules are fetched automatically during the image build. Open http://localhost:8080 when the container is up. The first run may take several minutes while the CPG database is generated.
+Submodules are fetched during the image build. **Before the first run:** set Docker’s memory to at least **10–12 GB** (Docker Desktop → Settings → Resources → Memory). Otherwise CPG generation may be killed (exit 137). Open http://localhost:8080 when the container is up. The first run may take several minutes while the CPG database is generated.
 
 ---
 

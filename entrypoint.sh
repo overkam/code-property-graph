@@ -10,7 +10,7 @@ PORT="${PORT:-8080}"
 if [ ! -f "$DB_PATH" ]; then
   echo "Database not found at $DB_PATH. Generating (this may take several minutes)..."
   cd /app
-  ./cpg-gen -modules './client_golang:github.com/prometheus/client_golang:client_golang,./prometheus-adapter:sigs.k8s.io/prometheus-adapter:adapter,./alertmanager:github.com/prometheus/alertmanager:alertmanager' ./prometheus "$DB_PATH" './client_golang:github.com/prometheus/client_golang:client_golang,./prometheus-adapter:sigs.k8s.io/prometheus-adapter:adapter,./alertmanager:github.com/prometheus/alertmanager:alertmanager' ./prometheus "$DB_PATH"
+  ./cpg-gen -modules './client_golang:github.com/prometheus/client_golang:client_golang,./prometheus-adapter:sigs.k8s.io/prometheus-adapter:adapter,./alertmanager:github.com/prometheus/alertmanager:alertmanager' ./prometheus "$DB_PATH"
   echo "Database generated."
 fi
 
