@@ -28,12 +28,8 @@ RUN go mod download && go build -o cpg-gen .
 
 # Stage 4: final image
 FROM alpine:3.19
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates go
 WORKDIR /app
-
-# cpg-gen needs "go" at runtime for packages.Load
-COPY --from=cpg-builder /usr/local/go /usr/local/go
-ENV PATH="/usr/local/go/bin:$PATH" GOROOT=/usr/local/go
 
 COPY --from=frontend /client/dist /static
 COPY --from=server-builder /build/server /server
